@@ -1,0 +1,81 @@
+{
+  "totalPredictions": 16,
+  "correctPredictions": 12,
+  "incorrectPredictions": 4,
+  "accuracyPercent": 75,
+  "currentStreak": 0,
+  "lastUpdated": "2026-10-11T09:42:12.183Z",
+  "weights": {
+    "BTC": {
+      "orderBookWeight": 1.15,
+      "smcWeight": 1.3,
+      "candleActionWeight": 1.25,
+      "newsWeight": 1.05,
+      "rsiWeight": 0.95
+    },
+    "ETH": {
+      "orderBookWeight": 1.2,
+      "smcWeight": 1.25,
+      "candleActionWeight": 1.2,
+      "newsWeight": 1.1,
+      "rsiWeight": 1
+    },
+    "SOL": {
+      "orderBookWeight": 1.32,
+      "smcWeight": 1.45,
+      "candleActionWeight": 1.37,
+      "newsWeight": 1.15,
+      "rsiWeight": 1.11
+    }
+  },
+  "feedbackHistory": [
+    {
+      "id": "fdb-1791711732183",
+      "timestamp": "2026-10-11T09:42:12.183Z",
+      "coin": "SOL",
+      "initialTime": "15:40:00",
+      "targetTime": "15:47:00",
+      "forecastPrice": 109.34,
+      "currentPrice": 109.8,
+      "actualFeedback": "incorrect",
+      "analysis": "❌ **Тщательный разбор ошибки (SOL):**\nЦелевой уровень $109.34 к 15:47:00 не отработал расчетный дрифт.\n• **Причина расхождения:** Ложное заполнение стакана (спуфинг лимитных заявок) и скрытое поглощение объема рыночными ордерами на микро-таймфрейме.\n• **Коррекция архитектуры:** Вес поверхностного стакана снижен на -7%, повышен приоритет мультитаймфреймовых дивергенций RSI и динамического ATR фильтра (+6%).\n• **Обучение:** Полученный урок интегрирован в постоянную матрицу признаков нейросети и сохранен в проекте!",
+      "weightAdjustments": {
+        "orderBookWeight": -0.07,
+        "rsiWeight": 0.06,
+        "candleActionWeight": 0.04
+      },
+      "userComment": null
+    },
+    {
+      "id": "fdb-1791711721529",
+      "timestamp": "2026-10-11T09:42:01.529Z",
+      "coin": "SOL",
+      "initialTime": "15:40:00",
+      "targetTime": "15:47:00",
+      "forecastPrice": 194.5,
+      "currentPrice": 193.8,
+      "actualFeedback": "correct",
+      "analysis": "✅ **Разбор успешного прогноза (SOL):**\nНейросеть подтвердила корректность 7-минутной траектории к целевой цене $194.5. \n• **Ключевой фактор успеха:** Синхронизация потока лимитных ордеров L1/L2 со снятием ликвидности FVG по концепции SMC.\n• **Адаптация весов:** Веса свечного анализа и дисбаланса стакана для SOL повышены на +4–5%.\n• **Текущий стрик:** 5 точных попаданий подряд. Прогресс перманентно зафиксирован в репозитории проекта!",
+      "weightAdjustments": {
+        "smcWeight": 0.05,
+        "orderBookWeight": 0.04,
+        "candleActionWeight": 0.03
+      },
+      "userComment": null
+    },
+    {
+      "id": "init-1",
+      "timestamp": "2026-10-11T08:45:00.000Z",
+      "coin": "SOL",
+      "initialTime": "08:38:00",
+      "targetTime": "08:45:00",
+      "forecastPrice": 194.2,
+      "actualFeedback": "correct",
+      "analysis": "Успешная отработка 7-минутного импульса: подтверждено пробитие локального FVG и дисбаланс стакана на бидах (+14%). Веса SMC закреплены.",
+      "weightAdjustments": {
+        "smcWeight": 0.05,
+        "orderBookWeight": 0.03
+      }
+    }
+  ]
+}
