@@ -1,0 +1,10 @@
+{
+  "balanceUsd": 10000,
+  "equityUsd": 10000,
+  "initialBalance": 10000,
+  "totalRealizedPnlUsd": 0,
+  "winCount": 0,
+  "lossCount": 0,
+  "positions": [],
+  "history": []
+}

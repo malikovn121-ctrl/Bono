@@ -26,6 +26,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ShortTermAnalysisDashboard } from './components/ShortTermAnalysisDashboard';
 
 interface GroundingSource {
   title: string;
@@ -178,6 +179,10 @@ interface CryptoPriceInfo {
     target2027: string;
     formulaBasis: string;
   };
+  multiHorizonScenarios?: any[];
+  tradingSignal?: any;
+  backtestMetrics?: any;
+  dataHealth?: any;
 }
 
 interface ChatMessage {
@@ -409,7 +414,11 @@ export default function App() {
   } | null>(null);
   const [userQueryDisplay, setUserQueryDisplay] = useState<string | null>(null);
 
-  // Crypto 7-Minute Forecast & Neural Network Learning State
+  // Professional AI Trading & Short-Term Analysis State
+  const [isTradingDashboardOpen, setIsTradingDashboardOpen] = useState(false);
+  const [selectedDashboardItem, setSelectedDashboardItem] = useState<any>(null);
+
+  // Crypto Forecast & Neural Network Learning State
   const [isCryptoMenuOpen, setIsCryptoMenuOpen] = useState(false);
   const [activePrediction, setActivePrediction] = useState<{
     coin: string;
@@ -575,12 +584,12 @@ export default function App() {
     }, 160);
   };
 
-  // Handler for 7-minute crypto quick forecast trigger
+  // Handler for professional short-term crypto analysis trigger
   const handleCryptoForecastSelect = (symbol: string, name: string) => {
     setIsCryptoMenuOpen(false);
     const now = new Date();
     const initialTimeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const targetObj = new Date(now.getTime() + 7 * 60 * 1000);
+    const targetObj = new Date(now.getTime() + 15 * 60 * 1000);
     const targetTimeStr = targetObj.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     setActivePrediction({
@@ -592,7 +601,7 @@ export default function App() {
     setFeedbackSubmitted(false);
     setFeedbackResult(null);
 
-    const prompt = `Сделай точный краткосрочный прогноз будущей цены криптовалюты ${symbol} (${name}) ровно через 7 минут (к ${targetTimeStr}) от начального реального времени отправки запроса (${initialTimeStr}). Проанализируй свечи, стакан ордеров, дельту объема и рассчитай целевую цену.`;
+    const prompt = `Сделай профессиональный краткосрочный анализ рынка ${symbol} (${name}) для AI-трейдинга. Проанализируй скользящие горизонты (5, 15, 30 и 60 минут), определи вероятные зоны локальных минимумов и максимумов, диапазон изменения цены, вероятности первого касания и сформируй торговый сигнал BUY/SELL/HOLD с учетом комиссий и проскальзывания.`;
     sendToAi(prompt);
   };
 
@@ -884,6 +893,47 @@ export default function App() {
       tabIndex={0}
       aria-label="Интерактивный белый круг и глаза ИИ на черном фоне"
     >
+      {/* Floating Top Navigation Bar */}
+      <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-between pointer-events-auto">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span className="text-xs font-mono text-neutral-300 font-semibold tracking-wider">
+            White Circle AI
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsTradingDashboardOpen(true)}
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-neutral-200 border border-neutral-700/80 hover:border-indigo-500 shadow-xl text-xs font-mono font-semibold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <Activity className="w-3.5 h-3.5 text-indigo-400" />
+          <span>AI-трейдинг и анализ</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+        </button>
+      </div>
+
+      {/* Standalone Short-Term Analysis & AI Trading Dashboard Modal */}
+      <AnimatePresence>
+        {isTradingDashboardOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-2 sm:inset-8 z-50 overflow-y-auto rounded-2xl shadow-2xl bg-black/95 backdrop-blur-2xl border border-neutral-800 p-2 sm:p-4 flex flex-col justify-start"
+          >
+            <ShortTermAnalysisDashboard
+              initialItem={selectedDashboardItem}
+              onClose={() => {
+                setIsTradingDashboardOpen(false);
+                setSelectedDashboardItem(null);
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Clickable AI Presence / Shape */}
       <button
         type="button"
@@ -1212,7 +1262,7 @@ export default function App() {
                       key={idx}
                       className="rounded-xl border border-neutral-800 bg-neutral-900/90 p-3.5 backdrop-blur-md shadow-xl"
                     >
-                      {/* Top row: Symbol, Name, Live dot, Time */}
+                      {/* Top row: Symbol, Name, Live dot, Time & Open Terminal Button */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-white tracking-wide">{item.name}</span>
@@ -1220,9 +1270,23 @@ export default function App() {
                             {item.symbol}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-mono">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                          <span>{item.timestamp}</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedDashboardItem(item);
+                              setIsTradingDashboardOpen(true);
+                            }}
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/50 text-[11px] font-mono font-semibold transition-all cursor-pointer shadow-sm active:scale-95"
+                            title="Открыть профессиональный анализ скользящих горизонтов, экстремумов и Paper Trading"
+                          >
+                            <Activity className="w-3 h-3 text-indigo-400" />
+                            <span>Терминал экстремумов</span>
+                          </button>
+                          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-mono">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>{item.timestamp}</span>
+                          </div>
                         </div>
                       </div>
 
@@ -1288,6 +1352,65 @@ export default function App() {
                           <div className="flex items-center gap-1.5 truncate">
                             <span className="text-neutral-500 shrink-0">Стена продавцов (Ask Wall):</span>
                             <span className="text-rose-300 font-semibold truncate">{item.orderBookAskWall || 'В расчете'}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Short-Term Extremum Scenarios & Trade Signal Strip */}
+                      {item.multiHorizonScenarios && item.multiHorizonScenarios.length > 0 && (
+                        <div className="mb-3 p-3 rounded-xl bg-neutral-950/80 border border-neutral-800 font-mono shadow-md">
+                          <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-800">
+                            <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-200">
+                              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                              <span>СКОЛЬЗЯЩИЕ ГОРИЗОНТЫ (ЛОКАЛЬНЫЕ ЭКСТРЕМУМЫ):</span>
+                            </div>
+                            {item.tradingSignal && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedDashboardItem(item);
+                                  setIsTradingDashboardOpen(true);
+                                }}
+                                className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 transition-transform hover:scale-105 cursor-pointer ${
+                                  item.tradingSignal.signal === 'BUY'
+                                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                                    : item.tradingSignal.signal === 'SELL'
+                                    ? 'bg-rose-950 text-rose-300 border border-rose-700'
+                                    : 'bg-amber-950 text-amber-300 border border-amber-700'
+                                }`}
+                              >
+                                <span>Сигнал: {item.tradingSignal.signal}</span>
+                                <span className="opacity-75">({item.tradingSignal.timeframeHorizon})</span>
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
+                            {item.multiHorizonScenarios.map((scen: any) => (
+                              <div
+                                key={scen.timeframe}
+                                onClick={() => {
+                                  setSelectedDashboardItem(item);
+                                  setIsTradingDashboardOpen(true);
+                                }}
+                                className="p-2 rounded-lg bg-neutral-900/80 border border-neutral-800/80 hover:border-indigo-500/50 cursor-pointer transition-all hover:bg-neutral-800/60"
+                              >
+                                <div className="text-white font-bold flex items-center justify-between mb-1">
+                                  <span>{scen.label}</span>
+                                  <span className="text-[9px] text-neutral-400">±{scen.corridor.rangePercent}%</span>
+                                </div>
+                                <div className="text-emerald-400 truncate">
+                                  Min: ${scen.localMinZone.min < 1 ? scen.localMinZone.min.toFixed(4) : Math.round(scen.localMinZone.min).toLocaleString()}
+                                </div>
+                                <div className="text-rose-400 truncate">
+                                  Max: ${scen.localMaxZone.max < 1 ? scen.localMaxZone.max.toFixed(4) : Math.round(scen.localMaxZone.max).toLocaleString()}
+                                </div>
+                                <div className="text-neutral-400 text-[9px] mt-1 pt-1 border-t border-neutral-800/60 flex items-center justify-between">
+                                  <span>1st hit:</span>
+                                  <span className="text-indigo-300 font-bold">{scen.localMaxZone.firstHitProbability}% Max</span>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}

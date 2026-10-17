@@ -1,0 +1,97 @@
+[
+  {
+    "id": "arch-init-1",
+    "timestamp": "2026-10-17T01:30:00.000Z",
+    "symbol": "BTCUSDT",
+    "currentPriceAtForecast": 105420,
+    "scenarios": [
+      {
+        "timeframe": "15m",
+        "label": "15 минут (Тактический)",
+        "minutes": 15,
+        "localMinZone": {
+          "min": 105150,
+          "max": 105280,
+          "midpoint": 105215,
+          "pctFromCurrent": -0.19,
+          "timeWindowMin": "5–9 мин",
+          "firstHitProbability": 38,
+          "isConfirmedByOrderBook": true,
+          "basis": "Локальная поддержка 15M + кластер лимитных бидов"
+        },
+        "localMaxZone": {
+          "min": 105800,
+          "max": 105950,
+          "midpoint": 105875,
+          "pctFromCurrent": 0.43,
+          "timeWindowMin": "8–13 мин",
+          "firstHitProbability": 62,
+          "isConfirmedByOrderBook": true,
+          "basis": "Верхняя граница коридора + FVG дисбаланс"
+        },
+        "corridor": {
+          "min": 105050,
+          "max": 106050,
+          "rangeUsd": 1000,
+          "rangePercent": 0.95
+        },
+        "projectedTrajectory": {
+          "primaryDirection": "bullish",
+          "firstLeg": "Тест зоны поддержки $105,215 при удержании",
+          "secondLeg": "Импульсный выход к цели $105,875",
+          "confidenceScore": 76
+        },
+        "invalidation": {
+          "priceLevel": 104950,
+          "condition": "Пробой и закрепление под $104,950 отменяет сценарий",
+          "uncertaintyLevel": "Умеренная",
+          "uncertaintyScore": 35
+        },
+        "isLocalExtremum": true,
+        "scopeNote": "Локальный краткосрочный экстремум внутри 15-минутного окна"
+      }
+    ],
+    "signal": {
+      "signal": "BUY",
+      "actionLabel": "Покупка на тесте локальной зоны поддержки",
+      "timeframeHorizon": "15m",
+      "entryZone": {
+        "min": 105180,
+        "max": 105300,
+        "recommended": 105240
+      },
+      "takeProfitTarget": 105850,
+      "stopLossLevel": 104950,
+      "riskRewardRatio": 2.1,
+      "costs": {
+        "makerFeePercent": 0.05,
+        "takerFeePercent": 0.1,
+        "estimatedSlippagePercent": 0.03,
+        "totalFrictionPercent": 0.13,
+        "totalFrictionUsd": 137.05,
+        "expectedGrossProfitPercent": 0.58,
+        "expectedNetProfitPercent": 0.45,
+        "edgeCoversFriction": true
+      },
+      "reasons": [
+        "Тест институционального FVG на 15M",
+        "Преобладание бидов в стакане L1/L2 (+18%)",
+        "Математическое преимущество покрывает трение в 3.4 раза"
+      ],
+      "uncertaintyFactors": [
+        "Возможен ложный прокол на публикации микро-новостей",
+        "Снижение объема на выходных"
+      ],
+      "generatedAt": "2026-10-17T01:30:00.000Z"
+    },
+    "actualOutcome": {
+      "actualMinReached": 105210,
+      "actualMaxReached": 105890,
+      "reachedMinTime": "+6 мин",
+      "reachedMaxTime": "+12 мин",
+      "firstHitOutcome": "MIN_FIRST",
+      "predictedCorrectly": true,
+      "tradeOutcome": "PROFIT"
+    }
+  }
+]
